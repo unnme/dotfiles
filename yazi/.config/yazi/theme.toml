@@ -1,0 +1,7 @@
+[flavor]
+use = "tokyo-night"
+
+[filetype]
+rules = [
+  { url = "*/", fg = "#7aa2f7" },
+]

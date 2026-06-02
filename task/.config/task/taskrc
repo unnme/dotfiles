@@ -1,0 +1,50 @@
+# [Created by task 3.4.2 4/20/2026 23:07:53]
+data.location=~/Library/Mobile Documents/com~apple~CloudDocs/_BACKUP/_files/TaskWarrior
+hooks.location=~/.config/task/hooks
+news.version=3.4.2
+
+
+# ── Report: next ──────────────────────────────────────────────────────────────
+report.next.columns=start.age,priority,project,tags,description,due
+report.next.labels=Age,P,Project,Tags,Description,Due
+report.next.sort=due+,priority-,urgency-
+
+# ── TokyoNight Night theme ────────────────────────────────────────────────────
+
+# Priorities
+color.uda.priority.H=bold color255 on color167  # white on red bg  — screams urgent
+color.uda.priority.M=bold color179              # yellow bold       — noticeable
+color.uda.priority.L=color67                    # muted blue        — subtle
+
+# Due dates
+color.due.today=bold color210          # red
+color.due=color179                     # yellow
+color.overdue=bold color210 on color52 # red on dark red
+
+# Tags & state
+color.tagged=color183                  # purple #bb9af7
+color.recurring=color117               # cyan   #7dcfff
+color.active=bold color149             # green  #9ece6a
+color.blocked=color238                 # gray
+color.blocking=bold color215           # orange #ff9e64
+
+# Completed / deleted
+color.completed=color238
+color.deleted=color238
+
+# Header & footer
+color.header=bold color111             # blue
+color.footnote=color109
+color.warning=bold color179
+color.error=bold color210
+
+# Calendar
+color.calendar.today=bold color210
+color.calendar.due=color179
+color.calendar.overdue=bold color210 on color52
+color.calendar.weekend=color238
+color.calendar.holiday=color183
+
+# Undo
+color.undo.before=color210
+color.undo.after=color149

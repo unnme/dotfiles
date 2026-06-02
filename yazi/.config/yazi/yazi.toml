@@ -1,0 +1,19 @@
+[mgr]
+show_hidden = true
+ratio = [2, 4, 4]
+sort_by = "natural"
+sort_dir_first = true
+sort_sensitive = false
+linemode = "none"
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+url  = "*"
+run  = "git"
+group = "git"
+
+[[plugin.prepend_fetchers]]
+id   = "git"
+url  = "*/"
+run  = "git"
+group = "git"
