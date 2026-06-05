@@ -37,13 +37,23 @@ autocmd("ModeChanged", {
 })
 
 autocmd("FileType", {
-  pattern = { "gitcommit", "markdown", "text", "log" },
+  pattern = { "gitcommit", "text", "log" },
   callback = function()
     vim.opt_local.wrap = true
     vim.opt_local.spell = true
   end,
   group = general,
   desc = "Enable wrap and spellcheck for writing filetypes",
+})
+
+autocmd("FileType", {
+  pattern = { "markdown" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = false
+  end,
+  group = general,
+  desc = "Enable wrap but disable spellcheck for markdown",
 })
 
 autocmd("LspAttach", {
