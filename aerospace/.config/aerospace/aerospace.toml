@@ -168,6 +168,10 @@ run = ['move-node-to-workspace 3']
 # ─── Floating: non-Apple apps ─────────────────────────────────────────────────
 
 [[on-window-detected]]
+if.app-id = 'com.googlecode.iterm2'
+run = ['layout floating']
+
+[[on-window-detected]]
 if.app-id = 'ru.keepcoder.Telegram'
 run = ['layout floating']
 

@@ -15,6 +15,3 @@ alias cd="z"
 
 # Brew
 alias brewfull='brew update && brew upgrade && brew autoremove && brew cleanup'
-
-# TaskWarrior
-alias tt="taskwarrior-tui"
