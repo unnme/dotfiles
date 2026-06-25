@@ -1,3 +1,4 @@
 tmux/.config/tmux/plugins/
 .DS_Store
 yazi/.config/yazi/plugins/
+lazy-lock.json

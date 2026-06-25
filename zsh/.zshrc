@@ -317,12 +317,8 @@ kali() {
 # Force emacs keymap — zsh auto-activates vi mode when EDITOR contains "vi" (nvim)
 bindkey -e
 
-bindkey "^[[1;3D" backward-word
-bindkey "^[[1;3C" forward-word
-bindkey '^[^H' backward-kill-word
-bindkey '^[d' kill-word
-bindkey "^[[1;4D" beginning-of-line
-bindkey "^[[1;4C" end-of-line
+
+
 
 autoload -z edit-command-line
 zle -N edit-command-line
