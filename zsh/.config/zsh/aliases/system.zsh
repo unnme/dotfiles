@@ -19,3 +19,6 @@ alias brewfull='brew update && brew upgrade && brew autoremove && brew cleanup'
 # SSH tunnels
 alias ss-tunnel='ssh -fNL 33611:localhost:33611 skystark-root && echo "https://localhost:33611/whereisxur/panel/"'
 alias ss-tunnel-close='pkill -f "ssh -fNL 33611"'
+
+# superseedr
+alias ssdr="superseedr"

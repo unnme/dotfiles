@@ -37,13 +37,23 @@ autocmd("ModeChanged", {
 })
 
 autocmd("FileType", {
-  pattern = { "gitcommit", "text", "log" },
+  pattern = { "gitcommit", "log" },
   callback = function()
     vim.opt_local.wrap = true
     vim.opt_local.spell = true
   end,
   group = general,
   desc = "Enable wrap and spellcheck for writing filetypes",
+})
+
+autocmd("FileType", {
+  pattern = { "text" },
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.spell = false
+  end,
+  group = general,
+  desc = "Enable wrap but disable spellcheck for plain text files",
 })
 
 autocmd("FileType", {

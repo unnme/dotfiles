@@ -60,7 +60,7 @@ path=(
   $HOME/.local/bin
   $HOME/bin
   /opt/homebrew/bin
-  /opt/homebrew/opt/openjdk@21/bin
+  /opt/homebrew/opt/openjdk/bin
   $BUN_INSTALL/bin
   $path
 )
@@ -254,6 +254,23 @@ pbp() {
 # KALI
 # ============================================================================
 
+# Prompts until a valid y/n is given; Enter defaults to N; Ctrl-D counts as N.
+_ask_yn() {
+  local prompt=$1 reply
+  while true; do
+    if ! read -k 1 "reply?$prompt [y/N] "; then
+      echo
+      return 1
+    fi
+    echo
+    case $reply in
+      [Yy]) return 0 ;;
+      [Nn]|"") return 1 ;;
+      *) echo "please answer y or n" ;;
+    esac
+  done
+}
+
 kali() {
   local mtp=0
   [[ "$1" == "-mtp" ]] && mtp=1
@@ -293,20 +310,17 @@ kali() {
     echo "mitmweb UI → http://127.0.0.1:9081"
     while true; do
       ssh "${ssh_opts[@]}" -R 1082:127.0.0.1:1082 -L 9081:127.0.0.1:8081 kali
-      read -k 1 "reply?Reconnect? [y/N] "; echo || break
-      [[ $reply =~ ^[Yy]$ ]] || break
+      _ask_yn "Reconnect?" || break
     done
   else
     while true; do
       ssh "${ssh_opts[@]}" kali
-      read -k 1 "reply?Reconnect? [y/N] "; echo || break
-      [[ $reply =~ ^[Yy]$ ]] || break
+      _ask_yn "Reconnect?" || break
     done
   fi
 
   trap - INT TERM
-  read -k 1 "reply?Stop kali VM? [y/N] "; echo
-  [[ $reply =~ ^[Yy]$ ]] && tart stop kali
+  _ask_yn "Stop kali VM?" && tart stop kali
 }
 
 
