@@ -167,6 +167,13 @@ run = ['move-node-to-workspace 3']
 
 # ─── Floating: non-Apple apps ─────────────────────────────────────────────────
 
+# iTerm2 profile "_tiled" (window title contains "_tiled") -> managed by AeroSpace tiling
+[[on-window-detected]]
+if.app-id = 'com.googlecode.iterm2'
+if.window-title-regex-substring = 'tiled'
+run = ['layout tiling']
+
+# iTerm2 profile "_main" and everything else -> floating
 [[on-window-detected]]
 if.app-id = 'com.googlecode.iterm2'
 run = ['layout floating']

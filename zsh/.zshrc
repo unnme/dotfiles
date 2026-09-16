@@ -1,3 +1,7 @@
+# Silence iTerm2 Shell Integration's blue mark indicator on every prompt line
+export ITERM2_SQUELCH_MARK=1
+
+
 # ============================================================================
 # XDG BASE DIRECTORIES
 # ============================================================================
@@ -7,13 +11,6 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_STATE_HOME="$HOME/.local/state"
 
-
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 
 # ============================================================================
 # CORE SETTINGS
@@ -33,6 +30,9 @@ export BUN_INSTALL="$HOME/.local"
 setopt AUTO_CD
 setopt AUTO_PUSHD
 setopt PUSHD_SILENT
+
+# Disable zsh's own "%" marker for unterminated previous output
+unsetopt PROMPT_SP
 
 
 # ============================================================================
@@ -65,7 +65,7 @@ path=(
   $path
 )
 
-[[ $- == *i* ]] && eval "$(zoxide init zsh)"
+[[ $- == *i* ]] && eval "$(zoxide init zsh --cmd cd)"
 
 
 # ============================================================================
@@ -127,13 +127,12 @@ source "$ZINIT_HOME/zinit.zsh"
 
 
 # ============================================================================
-# PROMPT
+# PROMPT (passion theme, sourced without full oh-my-zsh)
 # ============================================================================
 
-zinit ice depth=1
-zinit light romkatv/powerlevel10k
-
-[[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/p10k/p10k.zsh" ]] && source "${XDG_CONFIG_HOME:-$HOME/.config}/p10k/p10k.zsh"
+autoload -Uz colors && colors
+zinit snippet OMZL::git.zsh
+zinit snippet https://raw.githubusercontent.com/ChesterYue/ohmyzsh-theme-passion/master/passion.zsh-theme
 
 
 # ============================================================================
@@ -201,7 +200,7 @@ zstyle ':fzf-tab:complete:*:*' fzf-preview \
 tm() {
   if [[ -z "$1" ]]; then
     if [[ -z "$TMUX" ]]; then
-      tmux new-session -A -s _main
+      tmux new-session -A -s main
     fi
     return
   fi

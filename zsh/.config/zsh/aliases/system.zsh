@@ -11,10 +11,11 @@ alias cat="bat --paging=never"
 
 alias vi="nvim"
 alias sudo='sudo '
-alias cd="z"
 
 # Brew
-alias brewfull='brew update && brew upgrade && brew autoremove && brew cleanup'
+brewfull() {
+  brew update && brew upgrade && brew autoremove && brew cleanup
+}
 
 # SSH tunnels
 alias ss-tunnel='ssh -fNL 33611:localhost:33611 skystark-root && echo "https://localhost:33611/whereisxur/panel/"'
