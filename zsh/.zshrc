@@ -1,7 +1,3 @@
-# Silence iTerm2 Shell Integration's blue mark indicator on every prompt line
-export ITERM2_SQUELCH_MARK=1
-
-
 # ============================================================================
 # XDG BASE DIRECTORIES
 # ============================================================================
@@ -19,13 +15,19 @@ export XDG_STATE_HOME="$HOME/.local/state"
 export LANG=en_US.UTF-8
 export EDITOR="nvim"
 export HOMEBREW_NO_ENV_HINTS=1
-export EZA_CONFIG_DIR="$HOME/.config/eza"
+export EZA_CONFIG_DIR="$XDG_CONFIG_HOME/eza"
 export BAT_THEME="tokyonight_night"
-export DOCKER_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/docker"
-export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/npm/npmrc"
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export USQL_HISTORY="$XDG_STATE_HOME/usql/history"
 export BUN_INSTALL="$HOME/.local"
+
+# True color support for iTerm2
+export COLORTERM=truecolor
+
+# Silence iTerm2 Shell Integration's blue mark indicator on every prompt line
+export ITERM2_SQUELCH_MARK=1
 
 setopt AUTO_CD
 setopt AUTO_PUSHD
@@ -39,7 +41,7 @@ unsetopt PROMPT_SP
 # HISTORY (Dev optimized)
 # ============================================================================
 
-HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+HISTFILE="$XDG_STATE_HOME/zsh/history"
 HISTSIZE=200000
 SAVEHIST=200000
 
@@ -56,23 +58,20 @@ setopt hist_verify
 
 typeset -U path PATH
 
+# ~/.local/bin also holds bun binaries (BUN_INSTALL=$HOME/.local)
 path=(
   $HOME/.local/bin
-  $HOME/bin
   /opt/homebrew/bin
   /opt/homebrew/opt/openjdk/bin
-  $BUN_INSTALL/bin
   $path
 )
-
-[[ $- == *i* ]] && eval "$(zoxide init zsh --cmd cd)"
 
 
 # ============================================================================
 # FAST NVM LAZY LOADER
 # ============================================================================
 
-export NVM_DIR="$HOME/.local/share/nvm"
+export NVM_DIR="$XDG_DATA_HOME/nvm"
 
 # Add default nvm node to PATH immediately (without loading full nvm.sh)
 if [[ -d "$NVM_DIR/versions/node" ]]; then
@@ -116,7 +115,7 @@ nvm() {
 # ZINIT (FAST BOOTSTRAP)
 # ============================================================================
 
-ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+ZINIT_HOME="$XDG_DATA_HOME/zinit/zinit.git"
 
 if [[ ! -d $ZINIT_HOME ]]; then
   mkdir -p "$(dirname $ZINIT_HOME)"
@@ -141,13 +140,16 @@ zinit snippet https://raw.githubusercontent.com/ChesterYue/ohmyzsh-theme-passion
 
 autoload -Uz compinit
 
-_zcompdump="${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
+_zcompdump="$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
 if [[ -n $_zcompdump(#qN.mh+24) ]]; then
   compinit -d "$_zcompdump"
 else
   compinit -C -d "$_zcompdump"
 fi
 unset _zcompdump
+
+# bun completions
+[ -s "$XDG_DATA_HOME/bun/completions/_bun" ] && source "$XDG_DATA_HOME/bun/completions/_bun"
 
 
 # ============================================================================
@@ -162,6 +164,7 @@ zinit light Aloxaf/fzf-tab
 zinit ice wait'0' lucid
 zinit light joshskidmore/zsh-fzf-history-search
 zinit light zdharma-continuum/fast-syntax-highlighting
+
 
 # ============================================================================
 # FZF CONFIG
@@ -190,137 +193,7 @@ zstyle ':fzf-tab:complete:*:*' fzf-preview \
 # ALIASES
 # ============================================================================
 
-[[ -f "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliases.zsh" ]] && source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/aliases.zsh"
-
-
-# ============================================================================
-# FUNCTIONS
-# ============================================================================
-
-tm() {
-  if [[ -z "$1" ]]; then
-    if [[ -z "$TMUX" ]]; then
-      tmux new-session -A -s main
-    fi
-    return
-  fi
-  local name="$1"
-  if [[ ! "$name" =~ ^[a-zA-Z_][a-zA-Z0-9_-]*$ ]]; then
-    echo "error: only letters, digits, _ and - allowed (must start with a letter or _)" && return 1
-  fi
-  if tmux has-session -t "$name" 2>/dev/null; then
-    echo "session '$name' already exists" && return 1
-  fi
-  tmux new-session -d -s "$name" && echo "session '$name' created (detached)"
-}
-
-y() {
-  local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-  yazi "$@" --cwd-file="$tmp"
-
-  if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-    builtin cd -- "$cwd"
-  fi
-
-  rm -f -- "$tmp"
-}
-
-
-orb() {
-  if [[ "$1" == "stop" ]]; then
-    orbctl stop "${@:2}"
-    osascript -e 'quit app "OrbStack"' 2>/dev/null
-  else
-    command orb "$@"
-  fi
-}
-
-ff() {
-  aerospace list-windows --all | fzf --bind 'enter:execute(bash -c "aerospace focus --window-id {1}")+abort'
-}
-
-pbp() {
-  if [[ $# -eq 0 ]]; then
-    pwd | pbcopy
-  else
-    realpath "$1" | pbcopy
-  fi
-}
-
-
-
-# ============================================================================
-# KALI
-# ============================================================================
-
-# Prompts until a valid y/n is given; Enter defaults to N; Ctrl-D counts as N.
-_ask_yn() {
-  local prompt=$1 reply
-  while true; do
-    if ! read -k 1 "reply?$prompt [y/N] "; then
-      echo
-      return 1
-    fi
-    echo
-    case $reply in
-      [Yy]) return 0 ;;
-      [Nn]|"") return 1 ;;
-      *) echo "please answer y or n" ;;
-    esac
-  done
-}
-
-kali() {
-  local mtp=0
-  [[ "$1" == "-mtp" ]] && mtp=1
-
-  trap 'tart stop kali 2>/dev/null; [[ -n $tart_pid ]] && kill $tart_pid 2>/dev/null; trap - INT TERM; return 1' INT TERM
-
-  local shared=~/Documents/Shared
-
-  if [[ -e $shared && ! -d $shared ]]; then
-    echo "error: $shared exists but is not a directory" >&2
-    return 1
-  fi
-  [[ ! -d $shared ]] && mkdir -p "$shared"
-
-  local ssh_opts=(-o ConnectTimeout=2 -o StrictHostKeyChecking=no -o BatchMode=yes)
-
-  if ! tart list 2>/dev/null | grep -q "^local  kali.*running"; then
-    tart run kali --no-graphics --dir=mac:"$shared" &
-    local tart_pid=$! attempts=0 max=30
-
-    until ssh "${ssh_opts[@]}" -q kali exit 2>/dev/null; do
-      if ! kill -0 "$tart_pid" 2>/dev/null; then
-        echo "error: tart exited unexpectedly — VM failed to start" >&2
-        return 1
-      fi
-      (( ++attempts >= max )) && {
-        echo "error: timed out after ${max}s waiting for kali" >&2
-        kill "$tart_pid" 2>/dev/null
-        return 1
-      }
-      sleep 1
-    done
-  fi
-
-  if (( mtp )); then
-    # Connect with reverse tunnel: Kali localhost:1082 → Mac 127.0.0.1:1082 (Shadowrocket)
-    echo "mitmweb UI → http://127.0.0.1:9081"
-    while true; do
-      ssh "${ssh_opts[@]}" -R 1082:127.0.0.1:1082 -L 9081:127.0.0.1:8081 kali
-      _ask_yn "Reconnect?" || break
-    done
-  else
-    while true; do
-      ssh "${ssh_opts[@]}" kali
-      _ask_yn "Reconnect?" || break
-    done
-  fi
-
-  trap - INT TERM
-  _ask_yn "Stop kali VM?" && tart stop kali
-}
+[[ -f "$XDG_CONFIG_HOME/zsh/aliases.zsh" ]] && source "$XDG_CONFIG_HOME/zsh/aliases.zsh"
 
 
 # ============================================================================
@@ -330,9 +203,6 @@ kali() {
 # Force emacs keymap — zsh auto-activates vi mode when EDITOR contains "vi" (nvim)
 bindkey -e
 
-
-
-
 autoload -z edit-command-line
 zle -N edit-command-line
 bindkey "^X^E" edit-command-line
@@ -341,13 +211,24 @@ bindkey "^X^E" edit-command-line
 bindkey "^[[A" history-beginning-search-backward
 bindkey "^[[B" history-beginning-search-forward
 
-# zoxide + fzf interactive jump
+# zoxide + fzf interactive jump (__zoxide_zi is defined by zoxide init below)
 _zoxide_zi_widget() { BUFFER="__zoxide_zi"; zle accept-line; }
 zle -N _zoxide_zi_widget
 bindkey '^G' _zoxide_zi_widget
 
-# bun completions
-[ -s "$HOME/.local/share/bun/completions/_bun" ] && source "$HOME/.local/share/bun/completions/_bun"
 
-# True color support for iTerm2
-export COLORTERM=truecolor
+# ============================================================================
+# SECRETS
+# ============================================================================
+
+# GitHub token for Claude Code's github MCP server.
+# Exported to every process started from this shell.
+export GITHUB_TOKEN=$(grep '^GITHUB_TOKEN=' "$HOME/.claude/.env" 2>/dev/null | cut -d= -f2)
+
+
+# ============================================================================
+# ZOXIDE (keep last — zoxide expects to be initialized at the end of zshrc)
+# ============================================================================
+
+[[ $- == *i* ]] && eval "$(zoxide init zsh)"
+

@@ -6,3 +6,6 @@ vim.o.relativenumber = false
 -- phpactor has no diagnosticProvider capability (no error/syntax checking at
 -- all); intelephense actually reports errors, which is the point of the extra.
 vim.g.lazyvim_php_lsp = "intelephense"
+
+-- Try UTF-8 first, then cp1251 (Excel/1C CSVs), so Russian files don't open as garbage.
+vim.opt.fileencodings = "ucs-bom,utf-8,cp1251,default"

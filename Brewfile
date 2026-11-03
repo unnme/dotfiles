@@ -28,14 +28,18 @@ brew "imagemagick"
 brew "lazydocker"
 # Simple terminal UI for git commands
 brew "lazygit"
-# Cross-platform TUI database management tool
-brew "lazysql"
 # Library to render SVG files using Cairo
 brew "librsvg"
+# Deep clean and optimize your Mac
+brew "mole"
 # Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Port scanning utility for large networks
+brew "nmap"
 # Manage multiple Node.js versions
 brew "nvm"
+# Create, run, and share large language models (LLMs)
+brew "ollama"
 # Development kit for the Java programming language
 brew "openjdk"
 # General-purpose scripting language
@@ -77,6 +81,8 @@ cask "anydesk"
 cask "claude-code"
 # Client for the Dropbox cloud storage service
 cask "dropbox"
+# Collaborative team software
+cask "figma"
 # Web browser
 cask "firefox"
 cask "font-hack-nerd-font"
@@ -84,20 +90,20 @@ cask "font-hack-nerd-font"
 cask "google-chrome"
 # Free and open-source media player
 cask "iina"
-# iPhone management application
-cask "imazing"
 # Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
 # Password manager app
 cask "keepassxc"
+# Open-source software for live streaming and screen recording
+cask "obs"
 # Replacement for Docker Desktop
 cask "orbstack"
 # Used to access context-specific actions when text is selected
 cask "popclip"
 # HTTP client that helps testing and describing APIs
 cask "rapidapi"
-# Control your tools with a few keystrokes
-cask "raycast"
+# Menu bar toolkit with keep-awake, system monitor and volume mixer
+cask "vorssaint"
 npm "npm-check-updates"
 npm "typescript-language-server"
 npm "typescript"

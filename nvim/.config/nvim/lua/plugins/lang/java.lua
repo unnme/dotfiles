@@ -12,5 +12,9 @@ return {
     -- workspace-diagnostics.nvim needs client.config.filetypes to populate
     -- diagnostics for jdtls; nvim-jdtls doesn't set it by default.
     jdtls = { filetypes = { "java" } },
+    -- java-test 0.45.0 requires org.objectweb.asm 9.9.x, but jdtls 1.60.0 ships
+    -- 9.10.1, so the bundle fails to start on every launch. Re-enable once
+    -- java-test is updated for the newer asm.
+    test = false,
   },
 }

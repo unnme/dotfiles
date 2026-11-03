@@ -5,7 +5,9 @@ return {
   event = "VeryLazy",
   cmd = { "DapInstall", "DapUninstall" },
   opts = {
-    automatic_installation = true,
+    -- chrome adapter is deprecated (js-debug-adapter replaces it); plain `true`
+    -- would override the typescript extra's exclude and retry installing it.
+    automatic_installation = { exclude = { "chrome" } },
     handlers = {},
     ensure_installed = {
       "debugpy",
