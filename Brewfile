@@ -48,6 +48,8 @@ brew "php"
 brew "poppler"
 # Command-line shell and scripting language
 brew "powershell"
+# SVG rendering tool and library
+brew "resvg"
 # Search tool like grep and The Silver Searcher
 brew "ripgrep"
 # Organize software neatly under a single directory tree (e.g. /usr/local)
